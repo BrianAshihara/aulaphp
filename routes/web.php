@@ -33,7 +33,7 @@ Route::prefix('autor')->group(function () {
 
     
     Route::post('/store',[AutorController::class,'store'])->name('autor.store');
-    Route::post('/destroy/{id}',[AutorController::class,'destroy'])->name('autor.destroy');
+    Route::delete('/destroy/{id}',[AutorController::class,'destroy'])->name('autor.destroy');
     
 
 
