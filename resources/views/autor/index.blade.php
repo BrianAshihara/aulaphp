@@ -1,7 +1,8 @@
 @extends('layout.app')
 @section('content')
-    <h1>Listagem de autores</h1>
+
     <div>
+    <x-local-sistema mensagemPrincipal="Listagem de Autores" mensagemSecundaria="Lista de Autores Cadastrados" url="dashboard" navegacao="Pagina Principal" />
         <table>
             <tr>
                 <th>Nome</th>

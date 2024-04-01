@@ -1,12 +1,17 @@
 @extends('layout.app')
 @section('content')
-    <div>
+
+<div>
+    <x-local-sistema mensagemPrincipal="Alterar Autor" mensagemSecundaria="Alterar Registro" url="autor.index" navegacao="Listagem de Autores" />
+
+    <div class="tile">
+        <div class="tile-body">
         <form action="{{ route('autor.update', $registro->id) }}" method="POST">
             @csrf
             @method('PUT')
             @include('autor.__form')
-            <button type="submit">Salvar Registro</button>
+            <button class="btn btn-primary" type="submit">Salvar Registro</button>
         </form>
     </div>
-
+</div>
 @endsection

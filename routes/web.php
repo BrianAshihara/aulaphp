@@ -3,6 +3,7 @@
 //deve inserir a referencia aqui para conseguir usar o controller
 use App\Http\Controllers\AutorController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/dashboard', [Dashboard::class, 'dashboard'])->name('dashboard');
 
 //Chamando rota para usar o controller.
 //Listar geral
