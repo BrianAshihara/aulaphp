@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 interface AutorServiceInterface {
 
-    public function index();
+    public function index($pesquisar, $perPage);
 
     public function create();
 

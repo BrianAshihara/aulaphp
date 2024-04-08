@@ -6,23 +6,24 @@
 <div>
     <x-local-sistema mensagemPrincipal="Listagem de Autores" mensagemSecundaria="Lista de Autores Cadastrados" url="dashboard" navegacao="Pagina Principal" />
     <div class="container">
+    <div class= "row justify-content-center">
+      <div class="col-xs-12 col-sm-12 cold-md-12 ">
 
         <div class="tile">
             <div class="tile-body">
                 <form action="{{route('autor.index')}}" method="POST" class="form form-inline" action="{{route('autor.index')}}" method="POST">
-                    <form class="row row-cols-lg-auto g-3 align-items-center">
+                    <form class="row g-3 align-items-center">
                         @csrf
-                        <div class="col-12">
-                            <label class="visually-hidden" for="pesquisar">Pesquisar</label>
+                        <div class="col-7">
+                        
                             <div class="input-group">
                                 <div class="input-group-text"></div>
-                                <input type="text" name="pesquisar" class="form-control" id="pesquisar" placeholder="Username">
+                                <input type="text" name="pesquisar" class="form-control" id="pesquisar" placeholder="Pesquisa" value="{{isset($filter['pesquisar']) ? isset($filter['pesquisar']) : ''}}">
 
                             </div>
                         </div>
 
-                        <div class="col-12">
-                            <label class="visually-hidden" for="selecionar">Preference</label>
+                        <div class="col-2">
                             <select class="form-select" id="selecionar" name="perPage">
                                 @foreach($pages as $perPage)
                                 <option value="{{$perPage}}" @if($item==$perPage) selected @endif>{{$perPage}}</option>
@@ -31,13 +32,14 @@
                             </select>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-4">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
 
             </div>
             </form>
+            <br>
             <table class="table table-stipped table-bordered table-hover">
                 <tr class="cabecalho">
                     <th>Nome</th>
@@ -62,9 +64,23 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class ="pagination justify-content-end">
+                @if (isset($filter))
+                {{!! $registros->appends([
+                    'filter'=>$filter,
+                    'perPage'=>$perPage]
+                )->links() !!}}
+                @else
+                
+                 {{$registros->appends(['perPage'=>$perPage])->links()}}
+                @endif
+            </div>
             <a type="button" class="btn btn-primary" href="{{ route('autor.create')}}">Incluir novo Autor</a>
         </div>
     </div>
 </div>
 </div>
+                </div>
+                </div>
+                </div>
 @endsection

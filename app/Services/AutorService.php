@@ -14,11 +14,17 @@ class AutorService implements AutorServiceInterface {
         $this->repository = $autor;
     }
 
-    public function index() {
-        $registros = $this->repository->paginate(10);
-        return (
-            ["registros" => $registros]
-        );
+    public function index($pesquisar, $perPage) {
+        $registro = $this->repository->where(function($query) use($pesquisar){
+            if($pesquisar){
+                $query->where("nome","like","%".$pesquisar."%");
+                $query->orWhere("email","like","%".$pesquisar."%");
+                $query->orWhere("telefone","like","%".$pesquisar."%");
+            }
+        })->paginate($perPage);
+
+        return $registro;
+
     }
     
 

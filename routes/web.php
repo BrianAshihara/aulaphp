@@ -23,7 +23,7 @@ Route::get('/dashboard', [Dashboard::class, 'dashboard'])->name('dashboard');
 
 Route::prefix('autor')->group(function () {
 
-    Route::get('/index',[AutorController::class,'index'])->name('autor.index');
+    Route::any('/index',[AutorController::class,'index'])->name('autor.index');
     Route::get('/create',[AutorController::class,'create'])->name('autor.create');
     Route::get('/edit/{id}',[AutorController::class,'edit'])->name('autor.edit');
     Route::get('/destroy/{id}',[AutorController::class,'destroy'])->name('autor.destroy');
