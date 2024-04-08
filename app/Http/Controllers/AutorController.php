@@ -6,6 +6,10 @@ use App\Http\Requests\AutorFormRequest;
 use App\Models\Autor;
 use App\Services\AutorServiceInterface;
 use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class AutorController extends Controller
 {
@@ -31,8 +35,6 @@ class AutorController extends Controller
 
         return view('autor.index', [
             'registros'=> $registros,
-            'pages'=> [5,10,15,20],
-            'item' => $perPage,
             'perPage'=>$perPage,
             'filter'=> $pesquisar,
         ]);
@@ -52,9 +54,20 @@ class AutorController extends Controller
      */
     public function store(AutorFormRequest $request)
     {
-        $this->service->store($request);
-        return redirect()->route('autor.index');
-        
+
+        $registro = $request->all();
+
+        try{
+                $this->service->store($registro);
+                return redirect()->route('autor.index')->with('success','Registro realizado');
+        }catch(Exception $e){
+                return view('autor.create',[
+                    'registro'=>$registro,
+                    'fail'=>$e->getMessage(),
+                ]);
+        }
+
+
     }
 
     /**
@@ -62,12 +75,19 @@ class AutorController extends Controller
      */
     public function show(string $id)
     {
-
-        $registro = $this->service->show($id);
-
-        return view('autor.show', [
-            'registro' => $registro['registro'],
-        ]);
+        $registro = null;
+   
+        try{
+            $this->service->show($id);
+            return view('autor.show',[
+                'registro'=>$registro,
+            ]);
+    }catch(Exception $e){
+            return view('autor.edit',[
+                'registro'=>$registro,
+                'fail'=>$e->getMessage(),
+            ]);
+    }
     }
 
     /**
@@ -76,7 +96,17 @@ class AutorController extends Controller
     public function edit(string $id)
     {
         //complete a função de editar
-        $registro = $this->service->show($id);
+        try{
+            $this->service->edit($id);
+            return view('autor.edit',[
+                'registro'=>$registro,
+            ]);
+    }catch(Exception $e){
+            return view('autor.edit',[
+                'registro'=>$registro,
+                'fail'=>$e->getMessage(),
+            ]);
+    }   $registro = $this->service->show($id);
 
         return view('autor.edit', [
             'registro'=> $registro['registro'],
@@ -93,29 +123,51 @@ class AutorController extends Controller
         //
 
         //dd('Testeeeeee');
-        $this->service->update($request, $id);
+   
+        $registro = $request->all();
 
-        return redirect()->route('autor.index');
+        try{
+                $this->service->update($registro, $id);
+                return redirect()->route('autor.index')->with('success','Registro realizado');
+        }catch(Exception $e){
+                return view('autor.edit',[
+                    'registro'=>$registro,
+                    'fail'=>$e->getMessage(),
+                ]);
+        }
 
     }
 
     public function delete($id) {
-        $registro = $this->service->show($id);
-        
-        return view('autor.destroy', [
-            'registro'=> $registro['registro'],
-        ]);
+        try{
+            $this->service->show($id);
+            return view('autor.destroy',[
+                'registro'=>$registro,
+            ]);
+    }catch(Exception $e){
+            return view('autor.destroy',[
+                'registro'=>$registro,
+                'fail'=>$e->getMessage(),
+            ]);
+    }   
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
+        try{
+            $this->service->destroy($id);
+            return redirect()->route('autor.index')->with('success','Registro realizado');
+    }catch(Exception $e){
+            return view('autor.destroy',[
+                'fail'=>$e->getMessage(),
+            ]);
+    }
 
-        $this->service->destroy($id);
-        
+
         return redirect()->route('autor.index');
         
     }
+  
 }

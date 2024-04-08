@@ -6,6 +6,7 @@
 <div>
     <x-local-sistema mensagemPrincipal="Listagem de Autores" mensagemSecundaria="Lista de Autores Cadastrados" url="dashboard" navegacao="Pagina Principal" />
     <div class="container">
+        @include('layout.alert')
     <div class= "row justify-content-center">
       <div class="col-xs-12 col-sm-12 cold-md-12 ">
 
@@ -25,10 +26,12 @@
 
                         <div class="col-2">
                             <select class="form-select" id="selecionar" name="perPage">
-                                @foreach($pages as $perPage)
-                                <option value="{{$perPage}}" @if($item==$perPage) selected @endif>{{$perPage}}</option>
+                               
+                                <option value="{{$perPage}}" @if($perPage==5) selected @endif>5</option>
+                                <option value="{{$perPage}}" @if($perPage==10) selected @endif>10</option>
+                                <option value="{{$perPage}}" @if($perPage==15) selected @endif>15</option>
+                                <option value="{{$perPage}}" @if($perPage==20) selected @endif>20</option>
                                 
-                                @endforeach
                             </select>
                         </div>
 

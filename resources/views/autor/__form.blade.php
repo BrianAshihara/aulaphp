@@ -6,7 +6,7 @@
                 type="text"
                 name="nome"
                 id="nome"
-                value="{{ isset($registro->nome ?? old('nome') ''}}">
+                value="{{($registro->nome) ?? old('nome') }}">
                 @error('nome')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>

@@ -4,7 +4,13 @@ namespace App\Services;
 
 use App\Models\Autor;
 use App\Services\AutorServiceInterface;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
+use App\Services\ModelNotFoundException;
 
 class AutorService implements AutorServiceInterface {
 
@@ -34,15 +40,32 @@ class AutorService implements AutorServiceInterface {
 
     public function store(Request $request) {
 
-        $this->repository->create($request->all());
+
+        DB::beginTransaction();
+
+        try{
+
+            $registro = $this->repository->create($request);
+            DB::commit();
+            return $registro;
+        } catch( Exception $e)
+        {
+            DB::rollBack();
+            return new Exception('Erro ao criar o registro '. $e->getMessage());
+        }
     }
 
     public function show(string $id) {
-        $registro = $this->repository->find($id);
 
-        return (
-            ["registro" => $registro]
-        );
+        try{
+            $registro = $this->repository->findOrfail($id);
+            return $registro;
+
+        }catch(ModelNotFoundException $e ){
+            throw new Exception('Registro não localizado');
+
+        }
+    
     }
 
     public function edit(string $id) {
@@ -51,23 +74,45 @@ class AutorService implements AutorServiceInterface {
 
     public function update(Request $request, string $id) {
 
-        // $request->validate([
-        //     $registro = $request->all()
-        // ]);
+
+        $autorCadastrado= $this->repository->find($id);
+        DB::beginTransaction();
+
+        try{
+
+            $registro = $this->repository->create($request);
+            DB::commit();
+            return $registro;
+        } catch( Exception $e)
+        {
+            DB::rollBack();
+            return new Exception('Erro ao criar o registro '. $e->getMessage());
+        }
 
         $registro = $request->all();   
 
-        $autor = $this->repository->find($id);
+        
 
-        $autor -> update($registro);
+        $autorCadastrado -> update($registro);
     }
 
     public function delete($id) {}
     
     public function destroy(string $id) {
-        $registro = $this->repository->find($id);
+        $autorCadastrado = $this->show($id);
 
-        $registro->delete();
+
+
+        DB::beginTransaction();
+        try{
+
+            $autorCadastrado->delete();
+            DB::commit();
+        } catch( Exception $e)
+        {
+            DB::rollBack();
+            return new Exception('Erro ao excluir o registro '. $e->getMessage());
+        }
     }
 
 }
